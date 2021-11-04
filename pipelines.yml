@@ -6,7 +6,7 @@ resources:
     type: GitRepo
     configuration:
       gitProvider: MakasGit                       # <-- replace with your integration
-      path: jfrog/jfrog-pipelines-docker-sample    # <-- replace with your repository name
+      path: mtzavellas/jfrog-pipelines-docker-sample    # <-- replace with your repository name
       branches:
         include: master
 
