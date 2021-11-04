@@ -1,3 +1,5 @@
+valuesFilePath: ./values.yml
+
 resources:
   - name: dbp_repo
     type: GitRepo
@@ -10,7 +12,7 @@ resources:
   - name: dbp_image
     type: Image
     configuration:
-      registry: makas_art                                # <-- replace with your artifactory integration
+      registry: {{ .Values.config.registry }}                                # <-- replace with your artifactory integration
       sourceRepository: docker_local               # <-- required if registry is Artifactory
       imageName: kaloula.jfrog-pipelines.com/docker-local/dbp  # < -- replace with your image path and name
       imageTag: latest
@@ -19,14 +21,14 @@ resources:
   - name: dbp_build_info
     type: BuildInfo
     configuration:
-      sourceArtifactory: art
+      sourceArtifactory: {{ .Values.config.registry }}
       buildName: dbp_build
       buildNumber: 1    
 
   - name: dbp_promoted_build_info
     type: BuildInfo
     configuration:
-      sourceArtifactory: art
+      sourceArtifactory: {{ .Values.config.registry }}
       buildName: dbp_build
       buildNumber: 1
       
@@ -45,7 +47,7 @@ pipelines:
           inputResources:
             - name: dbp_repo
           integrations:
-            - name: art                            # <-- replace with your artifactory integration
+            - name: {{ .Values.config.registry }}                            # <-- replace with your artifactory integration
 
       - name: docker_push
         type: DockerPush
@@ -53,7 +55,7 @@ pipelines:
           affinityGroup: dbp_group
           targetRepository: docker-local
           integrations:
-            - name: art                            # <-- replace with your artifactory integration
+            - name: {{ .Values.config.registry }}                            # <-- replace with your artifactory integration
           inputSteps:
             - name: docker_build
           outputResources:
@@ -72,7 +74,7 @@ pipelines:
         configuration:
           targetRepository: demo-pipelines
           integrations:
-            - name: art
+            - name: {{ .Values.config.registry }}
           inputResources:
             - name: dbp_build_info
           outputResources:
